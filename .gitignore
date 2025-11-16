@@ -4,7 +4,7 @@ package-lock.json
 yarn.lock
 
 # Build outputs
-dist/
+# dist/ - Commented out to allow GitHub Pages deployment
 build/
 *.local
 

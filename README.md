@@ -58,6 +58,71 @@ src/
 └── main.jsx                       # Entry point
 ```
 
+## Building for Production
+
+To build the project for production:
+
+```bash
+npm run build
+```
+
+This will create a `dist` directory with the optimized production build.
+
+## Deploying to GitHub Pages
+
+1. **Build the project**:
+   ```bash
+   npm run build
+   ```
+
+2. **Commit the dist directory** (it's not ignored by git):
+   ```bash
+   git add dist
+   git commit -m "Build for GitHub Pages"
+   git push
+   ```
+
+3. **Configure GitHub Pages** (choose one method):
+
+   **Method 1: Using GitHub Actions (Recommended)**
+   - Create `.github/workflows/deploy.yml`:
+   ```yaml
+   name: Deploy to GitHub Pages
+   on:
+     push:
+       branches: [ main ]
+   jobs:
+     build-and-deploy:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v3
+         - uses: actions/setup-node@v3
+           with:
+             node-version: '18'
+         - run: npm install
+         - run: npm run build
+         - uses: peaceiris/actions-gh-pages@v3
+           with:
+             github_token: ${{ secrets.GITHUB_TOKEN }}
+             publish_dir: ./dist
+   ```
+   - Then in GitHub Settings → Pages, select "Deploy from a branch" → `gh-pages` branch
+
+   **Method 2: Manual deployment to gh-pages branch**
+   - Install gh-pages: `npm install --save-dev gh-pages`
+   - Add to package.json scripts: `"deploy": "npm run build && gh-pages -d dist"`
+   - Run: `npm run deploy`
+
+   **Method 3: If deploying from root (not recommended)**
+   - Copy contents of `dist` to root, or configure GitHub Pages to serve from root
+
+4. **Update base path** (if deploying to a subdirectory):
+   - If your repository name is not the root URL, update `vite.config.js`:
+   ```js
+   base: '/your-repo-name/'
+   ```
+   - Then rebuild and commit again
+
 ## Technologies Used
 
 - React 18
